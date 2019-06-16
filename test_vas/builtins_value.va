@@ -1,0 +1,8 @@
+[*SYSTEM*]$NAME_A   Storage: CMOS    Access: RW  : BOOLEAN    = FALSE
+[*SYSTEM*]$NAME_B   Storage: DRAM    Access: RO  : INTEGER    = 0
+[*SYSTEM*]$NAME_C   Storage: DRAM    Access: RO  : INTEGER    = 1234
+[*SYSTEM*]$NAME_D   Storage: DRAM    Access: RO  : INTEGER    = -1234
+[*SYSTEM*]$NAME_E   Storage: CMOS    Access: FP  : BYTE       = -0
+[*SYSTEM*]$NAME_F   Storage: SHADOW  Access: RW  : SHORT      = +0
+[*SYSTEM*]$NAME_G   Storage: CMOS    Access: RO  : REAL       = 3.000000e+00
+[*SYSTEM*]$NAME_H   Storage: SHADOW  Access: RW  : STRING[37] = 'some string'

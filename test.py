@@ -47,3 +47,6 @@ with open(path.join(tests_loc, 'xyzwpr_value.va'), 'r') as f:
 
 with open(path.join(tests_loc, 'primitives_struct_value.va'), 'r') as f:
     parser.parse(f.read())
+
+with open(path.join(tests_loc, 'builtins_value.va'), 'r') as f:
+    parser.parse(f.read())
