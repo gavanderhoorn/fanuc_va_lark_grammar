@@ -1,0 +1,7 @@
+[*SYSTEM*]$NAME  Storage: SHADOW  Access: RW  : NAME_T = 
+   Field: $NAME.$FIELD_A Access: RW: INTEGER = 356
+   Field: $NAME.$FIELD_B Access: RW: SHORT = 12
+   Field: $NAME.$FIELD_C Access: RW: BYTE = 4
+   Field: $NAME.$FIELD_D Access: RW: STRING[1] = 'a'
+   Field: $NAME.$FIELD_E Access: RW: BOOLEAN = TRUE
+   Field: $NAME.$FIELD_E Access: RW: REAL = 5.000

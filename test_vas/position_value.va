@@ -1,0 +1,4 @@
+[*SYSTEM*]$NAME  Storage: SHADOW  Access: RW  : POSITION = 
+  Group: 1   Config: N D B, 0, 0, 0
+  X:     0.000   Y:     0.000   Z:     0.000
+  W:     0.000   P:     0.000   R:     0.000

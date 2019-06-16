@@ -1,0 +1,2 @@
+[*SYSTEM*]$NAME  Storage: SHADOW  Access: FP  : ARRAY[1] OF NAME_T
+     Field: $NAME[1].$FIELD_A Access: RO: CONFIG = F U T, 1, 1, 1

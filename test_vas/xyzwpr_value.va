@@ -1,0 +1,5 @@
+[*SYSTEM*]$NAME_A  Storage: SHADOW  Access: RW  : ARRAY[1] OF NAME_T
+     Field: $NAME_A[1].$FIELD_A Access: RW: XYZWPR = 
+  Group: 1   Config: F U T, 127, -1, -1
+  X:     5.000   Y:     5.000   Z:     5.000
+  W:     5.000   P:     5.000   R:     5.000
