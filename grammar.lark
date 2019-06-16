@@ -1,0 +1,153 @@
+// Copyright (c) 2019, G.A. vd. Hoorn
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Author G.A. vd. Hoorn
+
+%import common.CNAME
+%import common.INT
+%import common.SIGNED_FLOAT
+%import common.SIGNED_INT
+%import common.WS
+
+%ignore WS
+%ignore COMMENT
+
+
+// .va has no comments, but helps grammar development
+COMMENT              : /#[^\n]*/
+SINGLE_QUOTED_STRING : /'[^']*'/
+BOOLEAN              : "TRUE" | "FALSE"
+// we treat this as a terminal, not sure about that yet
+UNINITIALIZED_VALUE  : "Uninitialized"
+
+
+// every .va must have at least a single var decl
+va_file : var_decl+
+
+// every var decl consists of:
+//  - location
+//  - name
+//  - some meta data
+//  - value
+var_decl : var_loc var_name var_decl_meta value_assignment
+
+// system variables (and special variables like strreg and numreg) get stars
+var_loc      : (sysvar_loc | program_loc) -> location
+?sysvar_loc  : "[*" CNAME "*]"
+?program_loc : "[" CNAME "]"
+
+// TODO: not very happy with the optional colon there: illegal for top-level
+//       var decls to /not/ have one
+var_decl_meta : var_properties ":"? kl_type
+
+// variable names
+var_name : ident ("." ident)*
+// TODO: for top-level names, it would be illegal to have a 'arr_subscript'
+// TODO: should we split this for program and sysvar cases?
+ident : "$"? CNAME arr_subscript?
+
+// var properties
+?var_properties : storage_def? access_def?
+?storage_def    : "Storage:" storage_type
+!storage_type   : "CMOS" | "DRAM" | "SHADOW"
+?access_def     : "Access:" access_type
+!access_type    : "RW" | "RO" | "FP"
+
+
+// types
+kl_type : builtin_type | array_type | struct_type
+
+// TODO: rewrite. Don't like the priority here (but otherwise struct_type
+//       will be matched too easily)
+?builtin_type.2 : boolean_type
+                | byte_type
+                | config_type
+                | integer_type
+                | jointpos9_type
+                | position_type
+                | real_type
+                | short_type
+                | string_type
+                | xyzwpr_type
+
+// primitive types
+boolean_type : "BOOLEAN"
+byte_type    : "BYTE"
+integer_type : "INTEGER"
+real_type    : "REAL"
+short_type   : "SHORT"
+
+// strings are a kind of arrays, but we model them seperately
+string_type : "STRING" len_spec
+
+// TODO: add support for VECTOR and XYZWPREXT?
+config_type    : "CONFIG"
+jointpos9_type : "JOINTPOS9"
+position_type  : "POSITION"
+xyzwpr_type    : "XYZWPR"
+
+// arrays can be recursive type defs
+array_type : "ARRAY" len_spec "OF" kl_type
+
+// as structs are user defined types, we can't know their names.
+// Best we can do is match as a regular name
+struct_type : CNAME
+
+// arrays
+// TODO: resolve duplication
+len_spec      : "[" positive_int_const ("," positive_int_const)* "]"
+array_idx     : "[" positive_int_const ("," positive_int_const)* "]"
+arr_subscript : "[" positive_int_const ("," positive_int_const)* "]"
+
+?positive_int_const : INT
+
+
+// value assignment, largely two cases:
+//  - non-array assignment includes structs,
+//  - array assignment includes arrays of structs
+?value_assignment : (array_assignment | var_assignment)
+
+// arrays of simple types and of structured types
+array_assignment : array_element+ | field_assignment+
+array_element    : array_idx var_assignment
+
+// either simple values, strings or fields of structs
+var_assignment : "=" ( SIGNED_FLOAT
+                     | SIGNED_INT
+                     | SINGLE_QUOTED_STRING
+                     | BOOLEAN
+                     | UNINITIALIZED_VALUE
+                     | position_value
+                     | config_value
+                     | jointpos9_value
+                     | xyzwpr_value
+                     | field_assignment+) -> value
+
+// TODO: sysframe.va contains a POSITION with a 'Config' without actual values?
+position_value : group_id "Config:" config_value? caxis_val ~ 6
+group_id : "Group:" INT
+caxis_val : /[XYZWPR]/ ~ 1 ":" SIGNED_FLOAT
+
+config_value : /[NFDUBT]/ ~3 ("," SIGNED_INT) ~ 3
+
+jointpos9_value : group_id joint_val+
+joint_val : "J" INT "=" SIGNED_FLOAT "deg"
+
+// TODO: this doesn't work for XYZWPREXT values
+// TODO: POSITION will match earlier, to fix we need to couple the type of the
+//       assignment expression with the value or we can't check.
+xyzwpr_value : position_value
+
+// TODO: merge with var_decl?
+field_assignment : "Field:" var_name var_decl_meta (array_assignment | var_assignment)
