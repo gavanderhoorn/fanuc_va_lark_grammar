@@ -58,11 +58,19 @@ var_name : ident ("." ident)*
 ident : "$"? CNAME arr_subscript?
 
 // var properties
-?var_properties : storage_def? access_def?
-?storage_def    : "Storage:" storage_type
-!storage_type   : "CMOS" | "DRAM" | "SHADOW"
-?access_def     : "Access:" access_type
-!access_type    : "RW" | "RO" | "FP"
+?var_properties  : storage_def? access_def?
+
+?storage_def     : "Storage" ":" storage_type
+?storage_type    : stor_type_cmos | stor_type_dram | stor_type_shadow
+stor_type_cmos   : "CMOS"
+stor_type_dram   : "DRAM"
+stor_type_shadow : "SHADOW"
+
+?access_def      : "Access" ":" access_type
+?access_type     : access_rw | access_ro | access_fp
+access_rw        : "RW"
+access_ro        : "RO"
+access_fp        : "FP"
 
 
 // types
