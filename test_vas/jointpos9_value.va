@@ -1,4 +1,3 @@
-[*SYSTEM*]$NAME  Storage: SHADOW  Access: RW  : ARRAY[1] OF NAME_T
-     Field: $NAME[1].$FIELD_A Access: RW: JOINTPOS9 =   Group: 1
+[*SYSTEM*]$NAME  Storage: SHADOW  Access: RW  : JOINTPOS9 =   Group: 1
   J1 =     5.000 deg   J2 =     5.000 deg   J3 =     5.000 deg 
   J4 =     5.000 deg   J5 =     5.000 deg   J6 =     5.000 deg 
