@@ -139,8 +139,8 @@ var_assignment : "=" ( SIGNED_FLOAT
                      | position_value
                      | config_value
                      | jointpos9_value
-                     | xyzwpr_value
                      | field_assignment+) -> value
+//                     | xyzwpr_value
 
 // TODO: sysframe.va contains a POSITION with a 'Config' without actual values?
 position_value : group_id "Config:" config_value? caxis_val ~ 6
@@ -155,7 +155,7 @@ joint_val : "J" INT "=" SIGNED_FLOAT "deg"
 // TODO: this doesn't work for XYZWPREXT values
 // TODO: POSITION will match earlier, to fix we need to couple the type of the
 //       assignment expression with the value or we can't check.
-xyzwpr_value : position_value
+//xyzwpr_value : position_value
 
 // TODO: merge with var_decl?
 field_assignment : "Field:" var_name var_decl_meta (array_assignment | var_assignment)
