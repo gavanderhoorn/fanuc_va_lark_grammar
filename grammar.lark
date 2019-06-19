@@ -43,9 +43,9 @@ va_file : var_decl+
 var_decl : var_loc var_name var_decl_meta value_assignment
 
 // system variables (and special variables like strreg and numreg) get stars
-var_loc      : (sysvar_loc | program_loc) -> location
-?sysvar_loc  : "[*" CNAME "*]"
-?program_loc : "[" CNAME "]"
+var_loc      : (_sysvar_loc | _program_loc) -> location
+_sysvar_loc  : "[*" CNAME "*]"
+_program_loc : "[" CNAME "]"
 
 // TODO: not very happy with the optional colon there: illegal for top-level
 //       var decls to /not/ have one
